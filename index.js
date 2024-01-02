@@ -1,12 +1,12 @@
-// hey.jsのmodule.exportsを呼び出します。
 import {heyFile} from './commands/hey.js';
+import {statusFile} from './commands/status.js';
 
 // discord.jsライブラリの中から必要な設定を呼び出し、変数に保存します
 import {Client, Events, GatewayIntentBits} from 'discord.js';
 // 設定ファイルからトークン情報を呼び出し、変数に保存します
 import fs from 'fs';
 const config = JSON.parse(fs.readFileSync('./config.json', 'utf-8'));
-const { applicationId, guildId, token } = config;
+const { token } = config;
 
 // クライアントインスタンスと呼ばれるオブジェクトを作成します
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -37,7 +37,20 @@ client.on(Events.InteractionCreate, async interaction => {
                 await interaction.reply({ content: 'コマンド実行時にエラーになりました。', ephemeral: true });
             }
         }
-    } else {
+    }
+    else if (interaction.commandName === statusFile.data.name) {
+        try {
+            await statusFile.execute(interaction);
+        } catch (error) {
+            console.error(error);
+            if (interaction.replied || interaction.deferred) {
+                await interaction.followUp({ content: 'コマンド実行時にエラーになりました。', ephemeral: true });
+            } else {
+                await interaction.reply({ content: 'コマンド実行時にエラーになりました。', ephemeral: true });
+            }
+        }
+    }
+    else {
         console.error(`${interaction.commandName}というコマンドには対応していません。`);
     }
 });
