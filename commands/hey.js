@@ -8,7 +8,8 @@ const data = new SlashCommandBuilder()
     .setDescription('あいさつに反応してbotが返事します');
 
 async function execute(interaction) {
-    await interaction.reply('hey.');
+    const name = interaction.user.username;
+    await interaction.reply(`hey, ${name}!`);
 }
 
 export const heyFile = { data, execute };
