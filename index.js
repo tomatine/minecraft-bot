@@ -1,10 +1,13 @@
 // hey.jsのmodule.exportsを呼び出します。
-const heyFile = require('./commands/hey.js');
+import {heyFile} from './commands/hey.js';
 
 // discord.jsライブラリの中から必要な設定を呼び出し、変数に保存します
-const { Client, Events, GatewayIntentBits } = require('discord.js');
+import {Client, Events, GatewayIntentBits} from 'discord.js';
 // 設定ファイルからトークン情報を呼び出し、変数に保存します
-const { token } = require('./config.json');
+import fs from 'fs';
+const config = JSON.parse(fs.readFileSync('./config.json', 'utf-8'));
+const { applicationId, guildId, token } = config;
+
 // クライアントインスタンスと呼ばれるオブジェクトを作成します
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
